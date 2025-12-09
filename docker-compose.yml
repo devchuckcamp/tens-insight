@@ -1,0 +1,22 @@
+# Docker Compose for Tens-Insight
+# Connects to existing GoInsight postgres container
+
+services:
+  tens-insight:
+    build: .
+    container_name: tens-insight
+    environment:
+      - DATABASE_URL=postgresql://goinsight:goinsight_dev_pass@goinsight-postgres:5432/goinsight?sslmode=disable
+      - MODELS_DIR=/app/models
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./models:/app/models  # Persist trained models
+      - ./src:/app/src        # Mount source for development
+    networks:
+      - goinsight_default
+    # Run setup by default, then wait
+    command: python setup.py
+
+networks:
+  goinsight_default:
+    external: true
