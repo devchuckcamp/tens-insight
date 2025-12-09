@@ -29,14 +29,14 @@ logger = logging.getLogger(__name__)
 
 def train_churn_model(
     lookback_days: int = 90,
-    test_size: float = 0.2,
+    test_size: float = None,
     model_version: str = "v1"
 ):
     """Train the account churn prediction model.
     
     Args:
         lookback_days: Number of days to look back for features
-        test_size: Fraction of data to use for testing
+        test_size: Fraction of data to use for testing (uses config default if None)
         model_version: Version identifier for the model
     """
     logger.info("=" * 60)
@@ -44,6 +44,11 @@ def train_churn_model(
     logger.info("=" * 60)
     
     config = get_config()
+    
+    # Use config values if not explicitly provided
+    if test_size is None:
+        test_size = 1 - config.validation_split
+    
     np.random.seed(config.random_seed)
     
     # Step 1: Build features

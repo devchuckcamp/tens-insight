@@ -38,6 +38,9 @@ class ChurnModel:
         
     def build_model(self) -> keras.Model:
         """Build the neural network architecture."""
+        # Get hyperparameters from config
+        batch_size = self.config.batch_size
+        
         model = keras.Sequential([
             layers.Input(shape=(self.input_dim,)),
             layers.Dense(64, activation='relu'),

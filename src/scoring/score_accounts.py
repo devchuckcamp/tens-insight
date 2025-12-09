@@ -26,22 +26,28 @@ logger = logging.getLogger(__name__)
 
 
 def score_accounts(
-    lookback_days: int = 90,
+    lookback_days: int = None,
     model_version: str = "v1",
-    batch_size: int = 1000
+    batch_size: int = None
 ):
     """Score all active accounts and write predictions to database.
     
     Args:
-        lookback_days: Number of days to look back for features
+        lookback_days: Number of days to look back for features (uses 90 if None)
         model_version: Version identifier for the model to load
-        batch_size: Number of accounts to score at once
+        batch_size: Number of accounts to score at once (uses config default if None)
     """
     logger.info("=" * 60)
     logger.info("Starting account scoring")
     logger.info("=" * 60)
     
     config = get_config()
+    
+    # Use defaults from config if not provided
+    if lookback_days is None:
+        lookback_days = 90
+    if batch_size is None:
+        batch_size = config.score_batch_size
     
     # Step 1: Load model
     logger.info(f"Loading churn model (version {model_version})...")
