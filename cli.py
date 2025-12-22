@@ -1,18 +1,23 @@
 #!/usr/bin/env python3
 """Command-line interface for Tens-Insight.
 
-Provides a unified interface for all ML pipeline operations.
+Provides a unified interface for all ML pipeline operations including
+scheduled continuous training.
 
 Usage:
     python cli.py setup
     python cli.py train [churn|product-area|all]
     python cli.py score [accounts|product-areas|all]
+    python cli.py scheduler start
+    python cli.py scheduler stop
+    python cli.py scheduler status
     python cli.py status
 """
 
 import sys
 import argparse
 import logging
+import time
 
 from src.config import get_config
 from src.db import execute_query
@@ -37,7 +42,8 @@ def cmd_train(args):
         from src.training.train_churn import train_churn_model
         train_churn_model(
             lookback_days=args.lookback_days,
-            model_version=args.version
+            model_version=args.version,
+            incremental=args.incremental
         )
     
     if args.model in ['product-area', 'all']:
@@ -45,7 +51,8 @@ def cmd_train(args):
         from src.training.train_product_area import train_product_area_model
         train_product_area_model(
             lookback_days=args.lookback_days,
-            model_version=args.version
+            model_version=args.version,
+            incremental=args.incremental
         )
 
 
@@ -116,6 +123,90 @@ def cmd_status():
     logger.info("=" * 60)
 
 
+def cmd_scheduler(args):
+    """Manage continuous training scheduler."""
+    from src.scheduler import TrainingScheduler
+    from src.training.train_churn import train_churn_model
+    from src.training.train_product_area import train_product_area_model
+    
+    scheduler = TrainingScheduler(timezone='UTC')
+    
+    if args.scheduler_action == 'start':
+        logger.info("=" * 60)
+        logger.info("Starting Continuous Training Scheduler")
+        logger.info("=" * 60)
+        
+        # Schedule daily churn training at 2 AM UTC
+        scheduler.schedule_daily_training(
+            model_type='churn',
+            hour=2,
+            minute=0,
+            training_function=train_churn_model,
+            training_kwargs={'incremental': True, 'lookback_days': 90}
+        )
+        
+        # Schedule weekly product area training on Sunday at 3 AM UTC
+        scheduler.schedule_weekly_training(
+            model_type='product_area',
+            day_of_week='sunday',
+            hour=3,
+            minute=0,
+            training_function=train_product_area_model,
+            training_kwargs={'incremental': True, 'lookback_days': 90}
+        )
+        
+        scheduler.start()
+        
+        logger.info("Scheduled jobs:")
+        for job_id, job_info in scheduler.get_scheduled_jobs().items():
+            config = job_info['config']
+            next_run = job_info['next_run']
+            logger.info(f"  {job_id}")
+            logger.info(f"    Type: {config.get('type')}")
+            logger.info(f"    Next run: {next_run}")
+        
+        logger.info("=" * 60)
+        logger.info("Scheduler is running. Press Ctrl+C to stop.")
+        logger.info("=" * 60)
+        
+        try:
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            logger.info("Shutting down scheduler...")
+            scheduler.stop()
+            logger.info("Scheduler stopped")
+    
+    elif args.scheduler_action == 'stop':
+        logger.info("Stopping scheduler...")
+        scheduler.stop()
+        logger.info("Scheduler stopped")
+    
+    elif args.scheduler_action == 'status':
+        logger.info("=" * 60)
+        logger.info("Training Scheduler Status")
+        logger.info("=" * 60)
+        
+        jobs = scheduler.get_scheduled_jobs()
+        
+        if jobs:
+            logger.info(f"Running: Yes")
+            logger.info(f"Total jobs: {len(jobs)}")
+            logger.info("")
+            logger.info("Scheduled jobs:")
+            for job_id, job_info in jobs.items():
+                config = job_info['config']
+                next_run = job_info['next_run']
+                logger.info(f"  {job_id}")
+                logger.info(f"    Type: {config.get('type')}")
+                logger.info(f"    Model: {config.get('model_type')}")
+                logger.info(f"    Next run: {next_run}")
+        else:
+            logger.info("No scheduled jobs")
+        
+        logger.info("=" * 60)
+
+
 def main():
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(
@@ -125,7 +216,10 @@ def main():
 Examples:
   %(prog)s setup
   %(prog)s train churn --lookback-days 90
+  %(prog)s train all --incremental
   %(prog)s score all --version v1
+  %(prog)s scheduler start
+  %(prog)s scheduler status
   %(prog)s status
         """
     )
@@ -150,8 +244,13 @@ Examples:
     )
     train_parser.add_argument(
         '--version',
-        default='v1',
-        help='Model version identifier (default: v1)'
+        default=None,
+        help='Model version identifier (auto-generated if not provided)'
+    )
+    train_parser.add_argument(
+        '--incremental',
+        action='store_true',
+        help='Check data freshness before training (default: False)'
     )
     
     # Score command
@@ -173,6 +272,17 @@ Examples:
         help='Model version to use (default: v1)'
     )
     
+    # Scheduler command
+    scheduler_parser = subparsers.add_parser(
+        'scheduler',
+        help='Manage continuous training scheduler'
+    )
+    scheduler_parser.add_argument(
+        'scheduler_action',
+        choices=['start', 'stop', 'status'],
+        help='Scheduler action'
+    )
+    
     # Status command
     subparsers.add_parser('status', help='Show pipeline status')
     
@@ -184,6 +294,8 @@ Examples:
         cmd_train(args)
     elif args.command == 'score':
         cmd_score(args)
+    elif args.command == 'scheduler':
+        cmd_scheduler(args)
     elif args.command == 'status':
         cmd_status()
     else:

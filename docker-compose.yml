@@ -1,5 +1,5 @@
 # Docker Compose for Tens-Insight
-# Connects to existing GoInsight postgres container
+# Supports both one-off training/scoring and continuous scheduled training
 
 services:
   tens-insight:
@@ -14,13 +14,39 @@ services:
       - VALIDATION_SPLIT=${VALIDATION_SPLIT:-0.2}
       - SCORE_BATCH_SIZE=${SCORE_BATCH_SIZE:-1000}
       - RANDOM_SEED=${RANDOM_SEED:-42}
+      - ENABLE_SCHEDULER=${ENABLE_SCHEDULER:-false}
     volumes:
-      - ./models:/app/models  # Persist trained models
-      - ./src:/app/src        # Mount source for development
+      - models_volume:/app/models       # Persist trained models
+      - ./src:/app/src                  # Mount source for development
+      - ./logs:/app/logs                # Persist logs
     networks:
       - goinsight_default
-    # Run setup by default, then wait
+    restart: unless-stopped
+    # Default: run setup and exit. Override with docker-compose run -e ENABLE_SCHEDULER=true
     command: python setup.py
+
+  # Optional: Scheduler-as-separate-service for continuous training
+  # Uncomment to enable long-running scheduler container
+  # tens-insight-scheduler:
+  #   build: .
+  #   container_name: tens-insight-scheduler
+  #   depends_on:
+  #     - tens-insight
+  #   environment:
+  #     - DATABASE_URL=${DATABASE_URL:-postgresql://goinsight:goinsight_dev_pass@goinsight-postgres:5432/goinsight?sslmode=disable}
+  #     - MODELS_DIR=${MODELS_DIR:-/app/models}
+  #     - LOG_LEVEL=${LOG_LEVEL:-INFO}
+  #   volumes:
+  #     - models_volume:/app/models
+  #     - ./logs:/app/logs
+  #   networks:
+  #     - goinsight_default
+  #   command: python cli.py scheduler start
+  #   restart: unless-stopped
+
+volumes:
+  models_volume:
+    driver: local
 
 networks:
   goinsight_default:
