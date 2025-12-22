@@ -1,6 +1,6 @@
 # Quick Reference: Environment Variables
 
-## All Configuration is Now Externalized ✅
+## All Configuration is Now Externalized
 
 **8 Environment Variables** - No hardcoded values in application code
 
@@ -154,15 +154,15 @@ LOG_LEVEL=INFO
 
 ---
 
-## No Hardcoded Values ✅
+## No Hardcoded Values
 
 **Verified:**
-- ✅ docker-compose.yml: All values use `${VAR}` syntax
-- ✅ src/config.py: All values loaded via `os.getenv()`
-- ✅ src/models/churn_model.py: Uses `self.config.*`
-- ✅ src/training/train_churn.py: Uses `config.*` values
-- ✅ src/scoring/score_accounts.py: Uses `config.*` values
-- ✅ .env.example: Fully documented
+- docker-compose.yml: All values use ${VAR} syntax
+- src/config.py: All values loaded via os.getenv()
+- src/models/churn_model.py: Uses self.config.*
+- src/training/train_churn.py: Uses config.* values
+- src/scoring/score_accounts.py: Uses config.* values
+- .env.example: Fully documented
 
 ---
 
@@ -234,12 +234,12 @@ A: Use `VAR=value command` before running (e.g., `BATCH_SIZE=64 python cli.py tr
 
 ## Key Points
 
-✅ All configuration externalized to environment variables
-✅ No hardcoded values in application code
-✅ Works with local dev, Docker, staging, production
-✅ Sensible defaults for all variables
-✅ Easy to override per-environment
-✅ Fully documented and audited
+All configuration externalized to environment variables
+No hardcoded values in application code
+Works with local dev, Docker, staging, production
+Sensible defaults for all variables
+Easy to override per-environment
+Fully documented and audited
 
 ---
 

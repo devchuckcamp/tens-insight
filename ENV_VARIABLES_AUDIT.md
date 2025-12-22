@@ -125,33 +125,33 @@ train_test_split(X, y, test_size=test_size, ...)
 
 ## Verification Checklist
 
-### ✅ Database Configuration
+### Database Configuration
 - [x] `DATABASE_URL` read from env (src/config.py:18)
 - [x] Falls back to Docker default if not set
 - [x] Used in: `src/db.py` get_engine()
 - [x] docker-compose.yml references ${DATABASE_URL}
 
-### ✅ Model Configuration
+### Model Configuration
 - [x] `MODELS_DIR` read from env (src/config.py:21)
 - [x] Default: `models/`
 - [x] Used in: src/models/churn_model.py, product_area_model.py
 
-### ✅ Training Configuration
+### Training Configuration
 - [x] `BATCH_SIZE` read from env (src/config.py:24)
 - [x] `EPOCHS` read from env (src/config.py:25)
 - [x] `VALIDATION_SPLIT` read from env (src/config.py:26)
 - [x] Used in: src/training/train_churn.py via model.train()
 - [x] Model receives from config: epochs, batch_size
 
-### ✅ Scoring Configuration
+### Scoring Configuration
 - [x] `SCORE_BATCH_SIZE` read from env (src/config.py:29)
 - [x] Used in: src/scoring/score_accounts.py
 
-### ✅ Logging Configuration
+### Logging Configuration
 - [x] `LOG_LEVEL` read from env (src/config.py:32)
 - [x] Used in: logging setup across modules
 
-### ✅ Docker Integration
+### Docker Integration
 - [x] docker-compose.yml reads all vars from .env
 - [x] Syntax: `${VAR_NAME:-default_value}`
 - [x] All training params passed to container
@@ -268,14 +268,14 @@ SCORE_BATCH_SIZE=1000
 
 ## Best Practices Implemented
 
-✅ **Centralized Configuration**: All env vars loaded in one place (src/config.py)
-✅ **Sensible Defaults**: All variables have defaults in Config class
-✅ **No Hardcoded Values**: Zero hardcoding in application code
-✅ **Docker Integration**: All vars passed through docker-compose.yml
-✅ **Documentation**: .env.example fully documented
-✅ **Type Safety**: All values properly typed and converted (int(), float(), str)
-✅ **Flexibility**: Easy to override per-environment
-✅ **Security**: Database credentials via environment variable
+**Centralized Configuration**: All env vars loaded in one place (src/config.py)
+**Sensible Defaults**: All variables have defaults in Config class
+**No Hardcoded Values**: Zero hardcoding in application code
+**Docker Integration**: All vars passed through docker-compose.yml
+**Documentation**: .env.example fully documented
+**Type Safety**: All values properly typed and converted (int(), float(), str)
+**Flexibility**: Easy to override per-environment
+**Security**: Database credentials via environment variable
 
 ---
 

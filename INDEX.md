@@ -1,10 +1,10 @@
 # Tens-Insight: Complete File Index
 
-## 📁 Project Structure Overview
+## Project Structure Overview
 
 This document provides a complete index of all files in the tens-insight project.
 
-## 📄 Documentation Files
+## Documentation Files
 
 | File | Description |
 |------|-------------|
@@ -16,7 +16,7 @@ This document provides a complete index of all files in the tens-insight project
 | `INTEGRATION_GUIDE.md` | Integration guide for GoInsight + Tens-Insight |
 | `INDEX.md` | This file - complete project index |
 
-## 🐍 Source Code Files
+## Source Code Files
 
 ### Core Modules
 
@@ -93,7 +93,7 @@ These files are created when you run the pipeline:
 | `models/product_area_model_v1_config.pkl` | Product area model configuration |
 | `.env` | Your actual environment variables (not committed) |
 
-## 🎯 File Purpose by Use Case
+## File Purpose by Use Case
 
 ### First-Time Setup
 1. Read `README.md`
@@ -125,7 +125,7 @@ These files are created when you run the pipeline:
 2. `docker-compose.yml` - orchestration
 3. `INTEGRATION_GUIDE.md` - deployment guide
 
-## 📝 Documentation by Audience
+## Documentation by Audience
 
 ### For Developers
 - `ARCHITECTURE.md` - System design and patterns
@@ -149,7 +149,7 @@ These files are created when you run the pipeline:
 - `PROJECT_SUMMARY.md` - Business value
 - `QUICK_REFERENCE.md` - What the system does
 
-## 🔍 Finding Things
+## Finding Things
 
 ### "How do I...?"
 
@@ -186,7 +186,7 @@ See the tables above organized by directory/purpose.
 | CLI commands | `cli.py` |
 | Setup procedures | `setup.py` |
 
-## 📈 Code Statistics
+## Code Statistics
 
 ```
 Total Python files: 15
@@ -211,7 +211,7 @@ Source Code: 50% (modular, well-commented)
 Configuration: 10% (Docker, deps, env)
 ```
 
-## 🎓 Learning Path
+## Learning Path
 
 For new contributors:
 
@@ -221,7 +221,7 @@ For new contributors:
 4. **Day 4**: Study `INTEGRATION_GUIDE.md`
 5. **Day 5**: Make your first contribution!
 
-## 📦 Dependencies
+## Dependencies
 
 See `requirements.txt` for complete list. Key dependencies:
 
@@ -231,7 +231,7 @@ See `requirements.txt` for complete list. Key dependencies:
 - scikit-learn
 - joblib
 
-## 🔗 Related Files
+## Related Files
 
 ### In GoInsight Repo
 - `goinsight/migrations/001_init.sql` - Creates `feedback_enriched`
@@ -242,7 +242,7 @@ See `requirements.txt` for complete list. Key dependencies:
 - GoInsight README: Project overview
 - GoInsight API docs: Endpoint specifications
 
-## 📞 Support Resources
+## Support Resources
 
 1. **Documentation**: Start with README.md
 2. **Examples**: Check USAGE.md
@@ -250,7 +250,7 @@ See `requirements.txt` for complete list. Key dependencies:
 4. **Quick Help**: Use QUICK_REFERENCE.md
 5. **Code Comments**: All Python files are well-commented
 
-## 🚀 Quick Links
+## Quick Links
 
 - Main README: `README.md`
 - Usage Guide: `USAGE.md`

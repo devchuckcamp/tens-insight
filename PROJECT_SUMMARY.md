@@ -1,10 +1,10 @@
 # Tens-Insight Project Summary
 
-## 🎯 What We Built
+## What We Built
 
 A complete, production-ready TensorFlow ML pipeline for the GoInsight customer feedback analytics platform.
 
-## 📦 Project Structure
+## Project Structure
 
 ```
 tens-insight/
@@ -41,60 +41,60 @@ tens-insight/
 └── USAGE.md                         # Comprehensive usage guide
 ```
 
-## 🔑 Key Features
+## Key Features
 
 ### 1. Database Integration
-- ✅ Connects to GoInsight's Postgres database
-- ✅ Reads from `feedback_enriched` table
-- ✅ Creates prediction tables (`account_risk_scores`, `product_area_impact`)
-- ✅ UPSERT functionality for efficient updates
+- Connects to GoInsight's Postgres database
+- Reads from `feedback_enriched` table
+- Creates prediction tables (`account_risk_scores`, `product_area_impact`)
+- UPSERT functionality for efficient updates
 
 ### 2. Feature Engineering
-- ✅ Account-level features for churn prediction
-- ✅ Product-area aggregation by segment
-- ✅ Derived features (ratios, trends, flags)
-- ✅ Categorical encoding
-- ✅ Missing value handling
+- Account-level features for churn prediction
+- Product-area aggregation by segment
+- Derived features (ratios, trends, flags)
+- Categorical encoding
+- Missing value handling
 
 ### 3. ML Models
-- ✅ **Churn Model**: TensorFlow neural network for account churn prediction
-- ✅ **Product Area Model**: Rule-based priority scoring
-- ✅ Model versioning support
-- ✅ Model persistence (save/load)
-- ✅ Preprocessing pipelines (StandardScaler)
+- **Churn Model**: TensorFlow neural network for account churn prediction
+- **Product Area Model**: Rule-based priority scoring
+- Model versioning support
+- Model persistence (save/load)
+- Preprocessing pipelines (StandardScaler)
 
 ### 4. Training Pipeline
-- ✅ Modular training scripts
-- ✅ Train/test splitting
-- ✅ Early stopping & learning rate scheduling
-- ✅ Comprehensive logging
-- ✅ Metrics reporting (accuracy, AUC, precision, recall)
-- ✅ Synthetic label generation (for demo purposes)
+- Modular training scripts
+- Train/test splitting
+- Early stopping & learning rate scheduling
+- Comprehensive logging
+- Metrics reporting (accuracy, AUC, precision, recall)
+- Synthetic label generation (for demo purposes)
 
 ### 5. Scoring Pipeline
-- ✅ Batch prediction for all accounts
-- ✅ Batch scoring for product areas
-- ✅ Health score calculation (0-100 scale)
-- ✅ Risk categorization (low/medium/high/critical)
-- ✅ Database write with UPSERT
-- ✅ Prediction statistics and summaries
+- Batch prediction for all accounts
+- Batch scoring for product areas
+- Health score calculation (0-100 scale)
+- Risk categorization (low/medium/high/critical)
+- Database write with UPSERT
+- Prediction statistics and summaries
 
 ### 6. Operations
-- ✅ Environment variable configuration
-- ✅ Command-line interface (cli.py)
-- ✅ Docker containerization
-- ✅ Docker Compose orchestration
-- ✅ Setup script for initialization
-- ✅ Status checking utility
+- Environment variable configuration
+- Command-line interface (cli.py)
+- Docker containerization
+- Docker Compose orchestration
+- Setup script for initialization
+- Status checking utility
 
 ### 7. Documentation
-- ✅ README with project overview
-- ✅ USAGE guide with examples
-- ✅ ARCHITECTURE document with design decisions
-- ✅ Code comments throughout
-- ✅ Example configurations
+- README with project overview
+- USAGE guide with examples
+- ARCHITECTURE document with design decisions
+- Code comments throughout
+- Example configurations
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 # 1. Setup
@@ -112,7 +112,7 @@ python cli.py score all
 python cli.py status
 ```
 
-## 📊 Output Tables
+## Output Tables
 
 ### account_risk_scores
 ```sql
@@ -142,7 +142,7 @@ CREATE TABLE product_area_impact (
 );
 ```
 
-## 🔄 Workflow
+## Workflow
 
 1. **Training** (weekly/monthly):
    ```bash
@@ -160,7 +160,7 @@ CREATE TABLE product_area_impact (
    - `/api/accounts/{id}/health` reads `account_risk_scores`
    - `/api/ask` may query `product_area_impact` for context
 
-## 🎨 Design Principles
+## Design Principles
 
 1. **Modular**: Clear separation of concerns (features, models, training, scoring)
 2. **Database-Centric**: All data flows through Postgres
@@ -170,7 +170,7 @@ CREATE TABLE product_area_impact (
 6. **Reproducible**: Seeded randomness, documented processes
 7. **Simple**: No unnecessary complexity, easy to understand and maintain
 
-## 🔧 Technologies
+## Technologies
 
 - **Python 3.11+**: Core language
 - **TensorFlow 2.x**: Deep learning framework
@@ -180,7 +180,7 @@ CREATE TABLE product_area_impact (
 - **scikit-learn**: Preprocessing & metrics
 - **Docker**: Containerization
 
-## 📈 What's Next?
+## What's Next?
 
 ### Ready for Production
 - [x] Database integration
@@ -197,7 +197,7 @@ CREATE TABLE product_area_impact (
 - [ ] Real-time scoring API
 - [ ] Advanced model architectures
 
-## 💡 Key Insights
+## Key Insights
 
 ### Why This Architecture?
 
@@ -241,7 +241,7 @@ DATABASE_URL=postgres://goinsight:goinsight_dev_pass@postgres:5432/goinsight?ssl
 - No HTTP endpoints
 - No dependency on GoInsight API
 
-## ✅ Validation Checklist
+## Validation Checklist
 
 - [x] Connects to Postgres database
 - [x] Reads feedback_enriched table
@@ -257,7 +257,7 @@ DATABASE_URL=postgres://goinsight:goinsight_dev_pass@postgres:5432/goinsight?ssl
 - [x] Can be run in Docker
 - [x] Has comprehensive documentation
 
-## 🎓 Learning Resources
+## Learning Resources
 
 ### For Understanding the Code
 1. Start with `README.md` for overview
@@ -277,16 +277,16 @@ DATABASE_URL=postgres://goinsight:goinsight_dev_pass@postgres:5432/goinsight?ssl
 3. Update training scripts in `src/training/`
 4. Adjust scoring scripts in `src/scoring/`
 
-## 🏆 Success Metrics
+## Success Metrics
 
 The pipeline is successful if:
-- ✅ Trains models without errors
-- ✅ Generates predictions for all accounts
-- ✅ Writes predictions to database
-- ✅ GoInsight can query and display predictions
-- ✅ Predictions are interpretable and actionable
-- ✅ Can be run on a schedule (cron/CI)
+- Trains models without errors
+- Generates predictions for all accounts
+- Writes predictions to database
+- GoInsight can query and display predictions
+- Predictions are interpretable and actionable
+- Can be run on a schedule (cron/CI)
 
 ---
 
-**Built with ❤️ for the GoInsight project**
+**Built for the GoInsight project**
