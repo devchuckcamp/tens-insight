@@ -9,7 +9,7 @@ Provides functionality for:
 """
 
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, Optional, Tuple
 
 from sqlalchemy import text
@@ -85,7 +85,9 @@ class IncrementalTrainer:
                     new_records = result.scalar() or 0
                     
                     percent_new = (new_records / total_count * 100) if total_count > 0 else 0
-                    days_since_training = (datetime.utcnow() - last_training_date).days
+                    # Make datetime timezone-aware for comparison
+                    now_utc = datetime.now(timezone.utc)
+                    days_since_training = (now_utc - last_training_date).days
                 else:
                     # First training
                     new_records = total_count

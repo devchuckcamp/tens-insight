@@ -268,7 +268,7 @@ class ModelRegistry:
                         status=row[3],
                         created_by=row[4],
                         description=row[5],
-                        hyperparameters=json.loads(row[6]) if row[6] else {},
+                        hyperparameters=row[6] if isinstance(row[6], dict) else (json.loads(row[6]) if row[6] else {}),
                         model_path=row[7],
                         scaler_path=row[8],
                         created_at=row[9]
@@ -302,7 +302,7 @@ class ModelRegistry:
                         status='active',
                         created_by=row[4],
                         description=row[5],
-                        hyperparameters=json.loads(row[6]) if row[6] else {},
+                        hyperparameters=row[6] if isinstance(row[6], dict) else (json.loads(row[6]) if row[6] else {}),
                         model_path=row[7],
                         scaler_path=row[8],
                         created_at=row[9]
@@ -511,7 +511,7 @@ class ModelRegistry:
                         status=row[3],
                         created_by=row[4],
                         description=row[5],
-                        hyperparameters=json.loads(row[6]) if row[6] else {},
+                        hyperparameters=row[6] if isinstance(row[6], dict) else (json.loads(row[6]) if row[6] else {}),
                         model_path=row[7],
                         scaler_path=row[8],
                         created_at=row[9]

@@ -112,7 +112,7 @@ def train_churn_model(
             error_msg = "No data available for training. Ensure feedback_enriched table has data."
             logger.error(error_msg)
             registry.complete_training_run(
-                run_id=training_run.id,
+                training_run_id=training_run.id,
                 status='failed',
                 training_samples=0,
                 test_samples=0,
@@ -134,7 +134,7 @@ def train_churn_model(
             error_msg = "Failed to extract target variable"
             logger.error(error_msg)
             registry.complete_training_run(
-                run_id=training_run.id,
+                training_run_id=training_run.id,
                 status='failed',
                 training_samples=0,
                 test_samples=0,
@@ -204,7 +204,7 @@ def train_churn_model(
                 metric_name=metric_name,
                 metric_value=metric_value,
                 dataset_type='test',
-                training_run_id=training_run.id
+                training_training_run_id=training_run.id
             )
         
         # Log prediction distribution for health checks
@@ -225,7 +225,7 @@ def train_churn_model(
         
         # Complete training run
         registry.complete_training_run(
-            run_id=training_run.id,
+            training_run_id=training_run.id,
             status='completed',
             training_samples=len(X_train),
             test_samples=len(X_test)
@@ -293,7 +293,7 @@ def train_churn_model(
     except Exception as e:
         logger.error(f"Training failed with error: {e}", exc_info=True)
         registry.complete_training_run(
-            run_id=training_run.id,
+            training_run_id=training_run.id,
             status='failed',
             training_samples=0,
             test_samples=0,
