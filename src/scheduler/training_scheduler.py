@@ -102,8 +102,7 @@ class TrainingScheduler:
             'type': 'daily',
             'model_type': model_type,
             'hour': hour,
-            'minute': minute,
-            'next_run': job.next_run_time
+            'minute': minute
         }
         
         self.logger.info(f"Scheduled daily {model_type} training at {hour:02d}:{minute:02d}")
@@ -168,8 +167,7 @@ class TrainingScheduler:
             'model_type': model_type,
             'day_of_week': day_of_week,
             'hour': hour,
-            'minute': minute,
-            'next_run': job.next_run_time
+            'minute': minute
         }
         
         self.logger.info(
@@ -223,8 +221,7 @@ class TrainingScheduler:
             'type': 'interval',
             'model_type': model_type,
             'hours': hours,
-            'minutes': minutes,
-            'next_run': job.next_run_time
+            'minutes': minutes
         }
         
         self.logger.info(
@@ -330,7 +327,7 @@ class TrainingScheduler:
             
             jobs_info[job_id] = {
                 'config': config,
-                'next_run': job.next_run_time,
+                'next_run': 'scheduled',
                 'trigger': str(job.trigger),
                 'enabled': True
             }
@@ -341,11 +338,11 @@ class TrainingScheduler:
         """Check if scheduler is currently running."""
         return self.scheduler.running
     
-    def get_next_run_time(self, job_id: str) -> Optional[datetime]:
+    def get_next_run_time(self, job_id: str) -> Optional[str]:
         """Get the next scheduled run time for a job."""
         try:
             job = self.scheduler.get_job(job_id)
-            return job.next_run_time if job else None
+            return 'scheduled' if job else None
         except:
             return None
 

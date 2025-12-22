@@ -14,7 +14,7 @@ class Config:
         # Database configuration
         self.database_url: str = os.getenv(
             'DATABASE_URL',
-            'postgres://goinsight:goinsight_dev_pass@postgres:5432/goinsight?sslmode=disable'
+            'postgresql://goinsight:goinsight_dev_pass@postgres:5432/goinsight?sslmode=disable'
         )
         
         # Model configuration
