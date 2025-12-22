@@ -27,22 +27,22 @@ services:
 
   # Optional: Scheduler-as-separate-service for continuous training
   # Uncomment to enable long-running scheduler container
-  # tens-insight-scheduler:
-  #   build: .
-  #   container_name: tens-insight-scheduler
-  #   depends_on:
-  #     - tens-insight
-  #   environment:
-  #     - DATABASE_URL=${DATABASE_URL:-postgresql://goinsight:goinsight_dev_pass@goinsight-postgres:5432/goinsight?sslmode=disable}
-  #     - MODELS_DIR=${MODELS_DIR:-/app/models}
-  #     - LOG_LEVEL=${LOG_LEVEL:-INFO}
-  #   volumes:
-  #     - models_volume:/app/models
-  #     - ./logs:/app/logs
-  #   networks:
-  #     - goinsight_default
-  #   command: python cli.py scheduler start
-  #   restart: unless-stopped
+  tens-insight-scheduler:
+    build: .
+    container_name: tens-insight-scheduler
+    depends_on:
+      - tens-insight
+    environment:
+      - DATABASE_URL=${DATABASE_URL:-postgresql://goinsight:goinsight_dev_pass@goinsight-postgres:5432/goinsight?sslmode=disable}
+      - MODELS_DIR=${MODELS_DIR:-/app/models}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    volumes:
+      - models_volume:/app/models
+      - ./logs:/app/logs
+    networks:
+      - goinsight_default
+    command: python cli.py scheduler start
+    restart: unless-stopped
 
 volumes:
   models_volume:
