@@ -7,14 +7,28 @@ Run this before running setup.py or training scripts.
 
 import os
 import sys
+from dotenv import load_dotenv
 
-# Set up environment
-os.environ['DATABASE_URL'] = 'postgresql://goinsight:goinsight_dev_pass@goinsight-postgres:5432/goinsight?sslmode=disable'
+# Load environment variables from .env file
+load_dotenv()
+
+# Get DATABASE_URL from environment
+database_url = os.getenv('DATABASE_URL')
+
+if not database_url:
+    print("=" * 60)
+    print("ERROR: DATABASE_URL not set!")
+    print("=" * 60)
+    print("Please set DATABASE_URL in .env file")
+    print("Example: DATABASE_URL=postgresql://user:pass@host:port/dbname?sslmode=require")
+    sys.exit(1)
 
 print("=" * 60)
 print("Testing Database Connection")
 print("=" * 60)
-print(f"Database URL: {os.environ['DATABASE_URL'].replace('@', '@***')}")
+# Mask password in output
+masked_url = database_url.split('@')[0].rsplit(':', 1)[0] + ':***@' + database_url.split('@')[1] if '@' in database_url else database_url
+print(f"Database URL: {masked_url}")
 print()
 
 # Test 1: Import modules

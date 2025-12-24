@@ -1,4 +1,5 @@
 # Dockerfile for Tens-Insight ML Pipeline
+# Use Python slim image (CPU-only TensorFlow from requirements.txt)
 FROM python:3.11-slim
 
 WORKDIR /app

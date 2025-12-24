@@ -106,7 +106,10 @@ def train_churn_model(
     try:
         # Step 1: Build features
         logger.info(f"Building account features with {lookback_days} day lookback...")
+        sys.stdout.flush()  # Ensure log is written before potential crash
         features_df = build_account_features(lookback_days=lookback_days)
+        logger.info(f"Features built successfully: {features_df.shape}")
+        sys.stdout.flush()
         
         if features_df.empty:
             error_msg = "No data available for training. Ensure feedback_enriched table has data."
@@ -121,6 +124,21 @@ def train_churn_model(
             sys.exit(1)
         
         logger.info(f"Built features for {len(features_df)} accounts")
+        
+        # Check minimum dataset size
+        MIN_ACCOUNTS = 20
+        if len(features_df) < MIN_ACCOUNTS:
+            error_msg = f"Insufficient data for training: {len(features_df)} accounts (minimum {MIN_ACCOUNTS} required)"
+            logger.error(error_msg)
+            logger.error("Please add more accounts to the feedback_enriched table before training.")
+            registry.complete_training_run(
+                training_run_id=training_run.id,
+                status='failed',
+                training_samples=0,
+                test_samples=0,
+                error_message=error_msg
+            )
+            sys.exit(1)
         
         # Step 2: Create synthetic labels (in production, use real churn data)
         logger.info("Creating synthetic churn labels...")
@@ -148,6 +166,13 @@ def train_churn_model(
         # Use config values if not explicitly provided
         if test_size is None:
             test_size = 1 - config.validation_split
+        
+        # For small datasets, ensure we have at least 2 samples per class in training
+        min_samples_per_class = min(y.sum(), len(y) - y.sum())
+        if min_samples_per_class < 4:
+            # Very small dataset - use 20% test size to ensure training works
+            test_size = 0.2
+            logger.warning(f"Small dataset detected ({len(y)} samples, {min_samples_per_class} in minority class). Using test_size={test_size}")
         
         # Step 4: Split data
         logger.info(f"Splitting data (test_size={test_size})...")

@@ -11,11 +11,13 @@ class Config:
     """Application configuration."""
     
     def __init__(self):
-        # Database configuration
-        self.database_url: str = os.getenv(
-            'DATABASE_URL',
-            'postgresql://goinsight:goinsight_dev_pass@postgres:5432/goinsight?sslmode=disable'
-        )
+        # Database configuration - required, no default
+        self.database_url: str = os.getenv('DATABASE_URL')
+        if not self.database_url:
+            raise ValueError(
+                "DATABASE_URL environment variable is required. "
+                "Set it in .env file or environment."
+            )
         
         # Model configuration
         self.models_dir: str = os.getenv('MODELS_DIR', 'models')
