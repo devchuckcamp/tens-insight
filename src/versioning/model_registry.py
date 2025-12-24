@@ -194,7 +194,7 @@ class ModelRegistry:
             with get_connection() as conn:
                 query = text("""
                     INSERT INTO model_metrics 
-                    (model_version_id, training_run_id, metric_name, metric_value, dataset_type, logged_at)
+                    (model_version_id, training_run_id, metric_name, metric_value, dataset_type, created_at)
                     VALUES (:model_version_id, :training_run_id, :metric_name, :metric_value, :dataset_type, NOW())
                 """)
                 
@@ -467,7 +467,7 @@ class ModelRegistry:
             with get_connection() as conn:
                 query = text("""
                     INSERT INTO prediction_distribution_history 
-                    (model_type, model_version_id, metric_name, metric_value, samples_count, logged_at)
+                    (model_type, model_version_id, metric_name, metric_value, samples_count, scoring_date)
                     VALUES (:model_type, :model_version_id, :metric_name, :metric_value, :samples_count, NOW())
                 """)
                 

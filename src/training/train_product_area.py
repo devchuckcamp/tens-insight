@@ -25,7 +25,8 @@ logger = logging.getLogger(__name__)
 
 def train_product_area_model(
     lookback_days: int = 90,
-    model_version: str = "v1"
+    model_version: str = "v1",
+    incremental: bool = False
 ):
     """Train (or rather, configure) the product area impact model.
     
@@ -35,6 +36,7 @@ def train_product_area_model(
     Args:
         lookback_days: Number of days to look back for features
         model_version: Version identifier for the model
+        incremental: Ignored for product area model (included for API consistency)
     """
     logger.info("=" * 60)
     logger.info("Starting product area model training")

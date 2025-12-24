@@ -1,33 +1,33 @@
 # Tens-Insight Quick Reference
 
-## Common Commands
+## Common Commands (Docker)
 
 ### Setup & Status
 ```bash
-python setup.py              # Initial setup
-python cli.py status         # Check system status
+docker-compose run --rm tens-insight python setup.py              # Initial setup
+docker-compose run --rm tens-insight python cli.py status         # Check system status
 ```
 
 ### Training
 ```bash
-python cli.py train churn              # Train churn model
-python cli.py train product-area       # Train product area model
-python cli.py train all                # Train both models
+docker-compose run --rm tens-insight python cli.py train churn              # Train churn model
+docker-compose run --rm tens-insight python cli.py train product-area       # Train product area model
+docker-compose run --rm tens-insight python cli.py train all                # Train both models
 ```
 
 ### Scoring
 ```bash
-python cli.py score accounts           # Score all accounts
-python cli.py score product-areas      # Score product areas
-python cli.py score all                # Score everything
+docker-compose run --rm tens-insight python cli.py score accounts           # Score all accounts
+docker-compose run --rm tens-insight python cli.py score product-areas      # Score product areas
+docker-compose run --rm tens-insight python cli.py score all                # Score everything
 ```
 
-### Docker
+### Docker Management
 ```bash
-docker compose build                           # Build image
-docker compose run tens-insight python cli.py status
-docker compose run tens-insight python cli.py train all
-docker compose run tens-insight python cli.py score all
+docker-compose build                           # Build image
+docker-compose up -d                          # Start services
+docker-compose down                           # Stop services
+docker-compose logs tens-insight              # View logs
 ```
 
 ## File Locations
@@ -124,34 +124,31 @@ cd ../goinsight && go run cmd/seed/main.go
 
 ### Model Not Found
 ```bash
-# Check models directory
-ls -lh models/
+# Check models directory (inside container)
+docker-compose run --rm tens-insight ls -lh models/
 
 # Retrain models
-python cli.py train all
+docker-compose run --rm tens-insight python cli.py train all
 ```
 
 ### Import Errors
+Check container logs:
 ```bash
-# Reinstall dependencies
-pip install -r requirements.txt
-
-# Check Python version (need 3.8+)
-python --version
+docker-compose logs tens-insight
 ```
 
 ## Scheduling
 
-### Daily Scoring (Cron)
+### Daily Scoring (via Docker)
 ```bash
-# Add to crontab
-0 3 * * * cd /path/to/tens-insight && python cli.py score all >> logs/score.log 2>&1
+# Use docker-compose scheduler service or cron with docker-compose
+0 3 * * * cd /path/to/tens-insight && docker-compose run --rm tens-insight python cli.py score all >> logs/score.log 2>&1
 ```
 
-### Weekly Training (Cron)
+### Weekly Training (via Docker)
 ```bash
-# Add to crontab
-0 2 * * 0 cd /path/to/tens-insight && python cli.py train all >> logs/train.log 2>&1
+# Use docker-compose scheduler service or cron with docker-compose  
+0 2 * * 0 cd /path/to/tens-insight && docker-compose run --rm tens-insight python cli.py train all >> logs/train.log 2>&1
 ```
 
 ## Model Files
@@ -167,17 +164,17 @@ models/
 
 ### System Health
 ```bash
-python cli.py status
+docker-compose run --rm tens-insight python cli.py status
 ```
 
 ### Database Health
 ```bash
-psql "$DATABASE_URL" -c "SELECT 1"
+docker-compose run --rm tens-insight psql "$DATABASE_URL" -c "SELECT 1"
 ```
 
 ### Model Health
 ```bash
-ls models/*.keras && echo "Models OK" || echo "Models missing"
+docker-compose run --rm tens-insight bash -c 'ls models/*.keras && echo "Models OK" || echo "Models missing"'
 ```
 
 ## API Integration

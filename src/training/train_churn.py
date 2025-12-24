@@ -62,9 +62,9 @@ def train_churn_model(
         logger.info("Incremental training mode: checking data freshness...")
         should_retrain, reason = trainer.check_training_necessity(
             model_type='churn',
-            min_new_data_percent=5.0,
-            min_days_since_training=7,
-            min_new_records=100
+            min_new_data_percent=5.0,      # 5% new feedback data
+            min_days_since_training=7,      # At least 7 days since last training
+            min_new_records=10              # At least 10 new feedback records (reduced from 100)
         )
         
         if not should_retrain:
@@ -126,11 +126,14 @@ def train_churn_model(
         logger.info(f"Built features for {len(features_df)} accounts")
         
         # Check minimum dataset size
-        MIN_ACCOUNTS = 20
+        # Note: Accounts are aggregated from feedback_enriched by customer_tier
+        # Each account represents feedback from one customer tier
+        MIN_ACCOUNTS = 5  # Reduced from 20 to allow training with smaller datasets
         if len(features_df) < MIN_ACCOUNTS:
             error_msg = f"Insufficient data for training: {len(features_df)} accounts (minimum {MIN_ACCOUNTS} required)"
             logger.error(error_msg)
-            logger.error("Please add more accounts to the feedback_enriched table before training.")
+            logger.error("Accounts are derived from feedback_enriched grouped by customer_tier.")
+            logger.error("Please ensure you have feedback from at least 5 different customer tiers.")
             registry.complete_training_run(
                 training_run_id=training_run.id,
                 status='failed',
@@ -226,17 +229,29 @@ def train_churn_model(
         for metric_name, metric_value in metrics.items():
             registry.log_metric(
                 model_version_id=version_entry.id,
+                training_run_id=training_run.id,
                 metric_name=metric_name,
                 metric_value=metric_value,
-                dataset_type='test',
-                training_training_run_id=training_run.id
+                dataset_type='test'
             )
         
         # Log prediction distribution for health checks
+        pred_mean = float(np.mean(churn_probs))
+        pred_std = float(np.std(churn_probs))
+        
         registry.log_prediction_distribution(
             model_type='churn',
             model_version_id=version_entry.id,
-            predictions=churn_probs.tolist()
+            metric_name='prediction_mean',
+            metric_value=pred_mean,
+            samples_count=len(churn_probs)
+        )
+        registry.log_prediction_distribution(
+            model_type='churn',
+            model_version_id=version_entry.id,
+            metric_name='prediction_std',
+            metric_value=pred_std,
+            samples_count=len(churn_probs)
         )
         
         # Step 8: Save model

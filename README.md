@@ -91,45 +91,35 @@ Tens-Insight shares the same Postgres database as GoInsight.
 
 ## Usage
 
-### Using the CLI (Recommended)
+### Using Docker (Recommended)
 
 ```bash
 # Check status
-python cli.py status
+docker-compose run --rm tens-insight python cli.py status
 
 # Train all models
-python cli.py train all
+docker-compose run --rm tens-insight python cli.py train all
 
 # Score everything
-python cli.py score all
+docker-compose run --rm tens-insight python cli.py score all
 
 # Train specific model
-python cli.py train churn --lookback-days 90 --version v1
+docker-compose run --rm tens-insight python cli.py train churn --lookback-days 90 --version v1
 
 # Score specific target
-python cli.py score accounts --version v1
+docker-compose run --rm tens-insight python cli.py score accounts --version v1
 ```
 
-### Using Python Modules Directly
+### Using CLI Directly (inside container)
 
 ```bash
-# Training
-python -m src.training.train_churn
-python -m src.training.train_product_area
+# First, enter the container
+docker-compose run --rm tens-insight bash
 
-# Scoring
-python -m src.scoring.score_accounts
-python -m src.scoring.score_product_areas
-```
-
-### Using Docker
-
-```bash
-# Train
-docker compose run tens-insight python cli.py train all
-
-# Score
-docker compose run tens-insight python cli.py score all
+# Then run commands
+python cli.py status
+python cli.py train all
+python cli.py score all
 ```
 
 ## Development
